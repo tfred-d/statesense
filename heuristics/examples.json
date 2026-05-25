@@ -1,0 +1,358 @@
+{
+  "version": "1.1.0",
+  "last_updated": "2026-05-25",
+  "purpose": "Few-shot example findings, one per heuristic id, used as voice/shape references when the model writes findings. NOT templates — the model should pattern-match style and specificity, not copy structure verbatim.",
+  "usage_notes": "Examples are intentionally terse. Designers scan; long descriptions get skipped. Target: title ≤8 words, description ≤30 words, suggestion ≤20 words. ~50 words per finding total. Variety across recipes, e-commerce, dashboards, signup, settings, messaging, editors prevents context fixation.",
+  "schema": {
+    "title": "Headline of the finding (≤8 words, ≤80 chars)",
+    "description": "1–2 short sentences anchored to a specific screen and element (≤30 words)",
+    "suggestion": "1 concrete fix — what to add and where (≤20 words)"
+  },
+  "examples": {
+    "loading.skeleton-vs-spinner": {
+      "title": "No loading state for the dashboard",
+      "description": "Screen 1 mocks the populated dashboard but not the loading frame. Users see a blank page until data arrives.",
+      "suggestion": "Add a skeleton: greyed rectangles for each chart and KPI card, matching the grid."
+    },
+    "loading.optimistic-rollback": {
+      "title": "Like button has no designed failure state",
+      "description": "Screen 2 shows the heart filled when liked, but no frame for when the server fails to register it.",
+      "suggestion": "Add a failure frame: heart un-fills, toast 'Couldn't save your like' with a Retry link."
+    },
+    "loading.long-operation-progress": {
+      "title": "Export jumps from button to completed report",
+      "description": "Screen 3 shows 'Generate Report' then the finished file. Nothing in between for a 10+ second operation.",
+      "suggestion": "Add an in-progress frame: progress bar, brief status, and a cancel button."
+    },
+    "loading.background-refresh-indicator": {
+      "title": "Live feed has no refresh indicator",
+      "description": "Screen 1's activity feed gives no signal that data is refreshing, or that newer items have arrived.",
+      "suggestion": "Consider an 'Updating…' label in the header and a 'View 3 new posts' pill on new content."
+    },
+    "loading.action-acknowledgment": {
+      "title": "Submit button has no in-flight state",
+      "description": "Screen 2's 'Submit' is only mocked in its default state. What it looks like while submitting is undefined.",
+      "suggestion": "Add an in-flight state: disabled, inline spinner, label 'Submitting…'. Keep width fixed."
+    },
+
+    "empty.first-time-vs-cleared": {
+      "title": "Inbox has only one empty-state variant",
+      "description": "Screen 1 shows a single 'Your inbox is empty' state. First-time users and users who've cleared everything see the same thing.",
+      "suggestion": "Design two: first-time ('Your messages will appear here') and cleared ('Inbox empty — view archived')."
+    },
+    "empty.filtered-no-results": {
+      "title": "No empty state for zero filter results",
+      "description": "Screen 2's filtered grid has no frame for when filters return zero — it falls back to the generic empty.",
+      "suggestion": "Add 'No products match these filters' with a 'Clear filters' button and a suggestion to remove the most restrictive."
+    },
+    "empty.search-no-results": {
+      "title": "Search has no 'no results' state",
+      "description": "Screen 3 only mocks search with results. No frame for empty results, no echo of the search term.",
+      "suggestion": "Add a no-results state quoting the term: 'No results for \"<term>\".' Include 'Did you mean' and 'Browse all'."
+    },
+    "empty.permission-restricted": {
+      "title": "Restricted-access state looks identical to empty",
+      "description": "Screen 1's Team Projects shows 'No projects here' for users without workspace access — same view as a truly empty workspace.",
+      "suggestion": "Design a distinct restricted state: 'You don't have access' + 'Request access' button."
+    },
+
+    "error.recovery-path-present": {
+      "title": "Payment-error state has no recovery action",
+      "description": "Screen 4 shows 'Payment could not be processed' with no buttons or links. Nowhere to go from here.",
+      "suggestion": "Add 'Try Again', 'Use a Different Card', and 'Contact Support' buttons below the error."
+    },
+    "error.scope-matches-cause": {
+      "title": "All errors use the same full-width banner",
+      "description": "Screen 2 shows field errors and form-level errors both as full-width red banners. Scope of the problem isn't visually distinct.",
+      "suggestion": "Inline errors under the offending field; reserve the banner for whole-form problems."
+    },
+    "error.differentiate-failure-modes": {
+      "title": "One generic error frame for every failure",
+      "description": "Screen 5 uses one 'Something went wrong' frame for offline, server-down, and validation — all needing different copy and recovery.",
+      "suggestion": "Design three frames: offline ('Changes will sync'), server-down ('Servers unreachable'), validation ('Correct highlighted fields')."
+    },
+    "error.preserve-user-input": {
+      "title": "Error state shows the signup form empty",
+      "description": "Screen 3's error-state mockup has empty fields with the banner above. Signals that resetting on error is fine.",
+      "suggestion": "Re-render the mockup with the user's input visible — error message above, fields preserved."
+    },
+
+    "auth.session-expired-mid-action": {
+      "title": "No state for session expiry during editing",
+      "description": "Screen 2's editor supports long sessions, but no design for what happens when the session expires mid-draft.",
+      "suggestion": "Add an in-context re-auth modal and a return-state showing the draft intact after sign-in."
+    },
+    "auth.protected-screen-logged-out": {
+      "title": "Protected /settings has no logged-out state",
+      "description": "Screen 1 shows /settings populated, but no frame for a logged-out user landing there directly.",
+      "suggestion": "Add a logged-out state: 'Sign in to manage your settings' + sign-in CTA, then return to /settings."
+    },
+    "auth.unallowed-action-visible": {
+      "title": "Viewer-role version of admin actions isn't mocked",
+      "description": "Screen 3 shows Edit, Delete, and Settings fully active. The PRD's 'viewer' role isn't mocked for this screen.",
+      "suggestion": "Decide hide vs. disable. If disabled, gray out with a tooltip. If hidden, mock the viewer's variant."
+    },
+    "auth.reauth-for-sensitive-action": {
+      "title": "No re-auth step before account deletion",
+      "description": "Screen 5's account deletion goes button → 'Are you sure?' → done. No re-auth challenge despite the consequence.",
+      "suggestion": "Consider a re-auth modal — type password to confirm — before the deletion is committed."
+    },
+
+    "validation.server-rejection-after-client-pass": {
+      "title": "No state for 'email already in use'",
+      "description": "Screen 1's signup handles invalid email format, but not the case where the email is valid yet already taken.",
+      "suggestion": "Add a post-submit state: 'This email is already in use. Sign in instead?' under the field."
+    },
+    "validation.format-hints-pre-error": {
+      "title": "Password field has no format hints",
+      "description": "Screen 2's password field shows only a label and placeholder. Requirements appear only after a failed submit.",
+      "suggestion": "Consider a live requirements list below the field: '✓ 8 characters / ✗ One number / ✗ One special'."
+    },
+    "validation.async-availability": {
+      "title": "Username uniqueness check isn't designed",
+      "description": "Screen 1's username field has only its default state — no checking, available, or taken-with-suggestion variants.",
+      "suggestion": "Add three states: spinner while checking, '✓ Available', '✗ Taken — try \"<suggestion>\"'."
+    },
+    "validation.required-vs-optional-signal": {
+      "title": "Required and optional fields look identical",
+      "description": "Screen 3's contact form has nine fields with no asterisks, 'Optional' labels, or helper text marking required ones.",
+      "suggestion": "Pick a convention — red asterisks + 'Required' legend, or '(optional)' tags — and apply uniformly."
+    },
+
+    "connectivity.offline-mode": {
+      "title": "Chat app has no offline state",
+      "description": "Screen 2's messaging assumes connectivity. No offline banner, no queued-message indicator, no fallback for send.",
+      "suggestion": "Add a banner ('You're offline — messages will send when you reconnect') and a queued-clock on pending messages."
+    },
+    "connectivity.slow-network": {
+      "title": "Image-heavy feed has no slow-network state",
+      "description": "Screen 1's feed assumes images load quickly. No low-res placeholder, no 'taking longer than usual' messaging.",
+      "suggestion": "Consider a low-res blur that resolves as the image loads, plus a delayed-load message after ~8s."
+    },
+    "connectivity.request-timeout": {
+      "title": "Loading state has no timeout fallback",
+      "description": "Screen 3's loading state shows a spinner indefinitely. If the request hangs, no retry, no cancel, no acknowledgment.",
+      "suggestion": "After ~15s, replace the spinner with 'This is taking longer than usual' and [Keep waiting] [Retry] [Cancel]."
+    },
+    "connectivity.retry-ux": {
+      "title": "Failed-load state has no retry button",
+      "description": "Screen 2's 'Couldn't load your feed' state has no retry. The only option is a full page refresh.",
+      "suggestion": "Add a [Retry] button where the feed would appear. Retry should preserve filters and pagination."
+    },
+
+    "data.long-text-overflow": {
+      "title": "Card titles only mocked at short lengths",
+      "description": "Every product card on Screen 1 has a tidy 2–4-word title. No example shows truncation, wrap, or expand behavior.",
+      "suggestion": "Include one card with a 60+ character title. Specify truncation (e.g. 2 lines + ellipsis, full on hover)."
+    },
+    "data.null-or-missing-fields": {
+      "title": "Profile only mocked with full data",
+      "description": "Screen 4 shows a profile with bio, location, website, and avatar all set. No variant for missing optional fields.",
+      "suggestion": "Mock a sparse profile: empty bio (or 'Add a bio' for owner), default avatar, missing fields handled cleanly."
+    },
+    "data.large-numbers": {
+      "title": "View counts only mocked at small numbers",
+      "description": "All post cards on Screen 2 show counts under 1,000. No mock at viral scale (50K, 1M, 10M+).",
+      "suggestion": "Add one card at '2.5M views' and specify the formatting threshold ('1.2K', '3.4M') so raw integers don't ship."
+    },
+    "data.i18n-text-expansion": {
+      "title": "Design only proofed in English",
+      "description": "PRD mentions international markets, but every screen uses short English labels. German runs 30–40% longer.",
+      "suggestion": "Consider a German variant of key screens to verify the layout holds. Flag directional icons for RTL."
+    },
+
+    "concurrency.stale-data-edit": {
+      "title": "No conflict state for collaborative editing",
+      "description": "Screen 1's shared editor supports multiple users, but no design for when User A saves after User B's update.",
+      "suggestion": "Add a conflict modal: 'Updated by Jamie 3 min ago' + [View their changes] [Overwrite] [Discard mine]."
+    },
+    "concurrency.action-while-loading": {
+      "title": "Bulk actions active while list still loading",
+      "description": "Screen 2's 'Delete selected' looks active before the file list finishes loading. Users could act on partial state.",
+      "suggestion": "Add a disabled toolbar state while loading, with a 'Loading files…' tooltip."
+    },
+
+    "recovery.undo-destructive": {
+      "title": "Email deletion is final once confirmed",
+      "description": "Screen 3's delete-email flow goes through a confirmation modal but ends there. No undo state once confirmed.",
+      "suggestion": "Consider an undo toast — 'Email moved to Trash. [Undo]' for ~5s — alongside or instead of the modal."
+    },
+    "recovery.confirm-irreversible": {
+      "title": "Account deletion uses generic 'Are you sure?'",
+      "description": "Screen 6 protects account deletion with the same modal used for canceling a draft. Friction is out of proportion.",
+      "suggestion": "Design a proportional confirm: type the account email — delete stays disabled until it matches."
+    },
+    "recovery.autosave-indicator": {
+      "title": "Editor has no save-state indicator",
+      "description": "Screen 1's editor shows content but no signal of whether changes have been saved. Users can't tell if auto-save is working.",
+      "suggestion": "Add three states near the title: 'Saved', 'Saving…' (spinner), 'Unsaved changes' (warning)."
+    },
+
+    "a11y.error-not-color-only": {
+      "title": "Field errors rely only on red borders",
+      "description": "Invalid fields on Screen 2's signup show only a red border — no icon, no helper text. Invisible to red-green color blindness.",
+      "suggestion": "Add a warning icon and helper text ('Please enter a valid email'). Red border becomes one of three signals."
+    },
+    "a11y.touch-target-size": {
+      "title": "Mobile breakpoint uses desktop icon sizes",
+      "description": "Screen 3's mobile variant keeps icon buttons at 16px — sized for mouse, not touch. Adjacent buttons sit tightly.",
+      "suggestion": "Resize icon buttons to ≥44×44px on mobile, with ≥8px separation between adjacent targets."
+    },
+
+    "counts.singular-vs-plural": {
+      "title": "Selection bar only mocked for plural counts",
+      "description": "Screen 1's file picker shows '5 files selected'. The singular case isn't mocked — would render as '1 files'.",
+      "suggestion": "Mock '1 file selected' and '2 files selected'. Optionally include '0 selected' as a disabled state."
+    },
+    "counts.too-many": {
+      "title": "Notification badge only mocked at small counts",
+      "description": "Screen 2's bell shows '3 unread'. No variant for high counts (200, 2000+) — engineering picks how to render them.",
+      "suggestion": "Add a '99+' variant for counts over 99. Specify the cutoff so engineering doesn't guess."
+    },
+    "counts.one-item-affordance": {
+      "title": "Carousel only mocked with multiple items",
+      "description": "Screen 4's 'Related products' carousel shows five items. No variant for one item — arrows would point to nothing.",
+      "suggestion": "Mock a single-item variant: hide arrows, optionally reflow to a centered card without carousel chrome."
+    },
+
+    "actions.success-confirmation": {
+      "title": "Order flow ends at 'Place Order'",
+      "description": "Screens 2–4 end with the 'Place Order' button. No screen shows what happens after success — order number, summary, next steps.",
+      "suggestion": "Add a confirmation screen: order number, item summary, delivery estimate, 'Continue shopping' or 'Track order'."
+    },
+    "actions.disabled-primary": {
+      "title": "Primary action only mocked in active state",
+      "description": "Screen 2's 'Continue' button appears only active. The disabled case — and what enables it — isn't shown.",
+      "suggestion": "Mock the disabled state: grayed-out with tooltip 'Complete required fields to continue'. Visually distinct from active."
+    },
+    "actions.selected-active": {
+      "title": "Sidebar nav has no active-state design",
+      "description": "Screen 1's left sidebar shows nav items in a single style. The active/selected item isn't designed.",
+      "suggestion": "Mock the active state: distinct background, left-edge accent bar, bolder label. Clearly different from hover."
+    },
+
+    "hierarchy.subject-identity": {
+      "title": "Recipe screen doesn't show the dish name",
+      "description": "Screen 1 shows a photo, ingredient grid, and cooking steps — but the dish name doesn't appear anywhere. Users don't know what they're making.",
+      "suggestion": "Is the name handled elsewhere in the flow? If not, place it as a prominent heading above the image."
+    },
+    "hierarchy.primary-action-dominance": {
+      "title": "Three buttons compete for primary attention",
+      "description": "Screen 1's action bar shows 'Cook', 'Save', and 'Watch' as equally-weighted pills. No signal of which is primary.",
+      "suggestion": "Pick one as primary — solid fill, brand color — and let the other two recede into outline styling."
+    },
+    "hierarchy.above-the-fold-value": {
+      "title": "Primary content sits below the fold",
+      "description": "Above the fold on Screen 1: nav, hero photo, QR code. The dish name, metadata, and 'Cook' button require scrolling.",
+      "suggestion": "Tighten the above-fold composition so dish identity, key metadata, and primary action are visible without scrolling."
+    },
+
+    "affordance.interactive-looks-interactive": {
+      "title": "QR code has no affordance signal",
+      "description": "Screen 1's top-left QR code has no label, border, or container suggesting interactivity. Users may not know it does anything.",
+      "suggestion": "Is it intentionally unlabeled? If not, add a 'Scan to cook on mobile' caption or button frame."
+    },
+
+    "consistency.same-type-same-treatment": {
+      "title": "Greek Yoghurt card breaks the ingredient grid",
+      "description": "Screen 1's ingredient grid has 13 photo thumbnails and one 'GY' text card on beige. Reads as broken or unfinished.",
+      "suggestion": "Replace 'GY' with a circular thumbnail — photograph or stylized icon — matching the other cards' shape."
+    },
+    "consistency.typography-and-spacing": {
+      "title": "Section headers use inconsistent scales",
+      "description": "On Screen 2, 'Ingredients' is 24px and 'Cooking Steps' is 28px. Section spacing also varies (16px vs 32px).",
+      "suggestion": "Is the difference intentional? If not, unify the header scale and inter-section spacing."
+    },
+
+    "content.evaluation-metadata": {
+      "title": "Recipe has no prep time, servings, or difficulty",
+      "description": "Screen 1 has the photo, ingredients, and steps but no at-a-glance metadata. Users have to estimate fit for time and household.",
+      "suggestion": "Add a metadata row near the title: prep time, cook time, servings, difficulty, dietary tags."
+    },
+    "content.trust-signals": {
+      "title": "Recipe shows no ratings, reviews, or attribution",
+      "description": "Screen 1 presents the recipe with no rating, review count, or author byline. No shortcut to evaluate quality.",
+      "suggestion": "Is the absence intentional (curated minimalism)? If not, add rating, review count, and author near the title."
+    },
+
+    "cognitive.density-and-scannability": {
+      "title": "All sections compete equally for attention",
+      "description": "Screen 1 has roughly equal visual weight across the photo, ingredient grid, steps, and action bar. No clear starting point.",
+      "suggestion": "Lighten secondary content (smaller cards, thinner step numbers) so the eye lands on the dish name and primary action."
+    },
+
+    "mode.current-mode-visible": {
+      "title": "Cooking mode and browse mode look identical",
+      "description": "Screen 1's cook-mode and browse-mode variants look the same except for a button label change. No clear mode signal.",
+      "suggestion": "Add a mode indicator: a 'Cooking' pill in the header, optionally dimming non-essential UI."
+    },
+
+    "layout.element-overlap-integrity": {
+      "title": "Floating bar overlaps the ingredient grid",
+      "description": "Screen 1's bottom bar covers part of the ingredient grid — 'Maple Syrup Or Honey' peeks out from under it.",
+      "suggestion": "Add bottom padding to the grid equal to the bar's height plus a comfortable margin."
+    },
+
+    "flow.continuity-between-steps": {
+      "title": "Cart-review step appears to be missing",
+      "description": "Screen 1 shows 'Add to cart' and Screen 3 shows 'Order confirmation'. The cart-review step between them isn't in the flow.",
+      "suggestion": "Add the cart-review screen — confirm items, enter shipping, pay. Or include it if it already exists."
+    },
+    "flow.navigation-back-cancel": {
+      "title": "Users get trapped after step 2 of signup",
+      "description": "Signup screens 2 and 3 have no back arrow, cancel link, or close button. The only way out is finishing the flow.",
+      "suggestion": "Add a 'Back' link at the top of each step and a 'Cancel signup' option in the secondary nav."
+    },
+    "flow.state-preservation-cross-screen": {
+      "title": "Email doesn't appear on confirmation",
+      "description": "Screen 1 captures the user's email; Screen 3 (confirmation) shows generic 'Thanks for signing up' with no echo.",
+      "suggestion": "Show what the user just did: 'We've sent a verification link to <email>.'"
+    },
+    "flow.visual-system-consistency": {
+      "title": "Screen 3 uses a different typographic scale",
+      "description": "Screens 1 and 2 use 16/24px and rounded buttons. Screen 3 uses 14/20px and squared buttons — visually inconsistent.",
+      "suggestion": "Is Screen 3 from a different source? If unintentional, unify scale, button style, and spacing across the three."
+    },
+    "flow.entry-and-exit-states": {
+      "title": "Onboarding has no entry or exit framing",
+      "description": "Screens 1–4 of the onboarding begin and end abruptly. No entry context, no completion state, no clear next step.",
+      "suggestion": "Add entry framing ('About 2 minutes') and a completion state ('You're all set — try these next')."
+    },
+    "flow.progress-indication": {
+      "title": "Multi-step signup has no step counter",
+      "description": "The four signup screens each show only their own form. No progress bar, step counter, or breadcrumb.",
+      "suggestion": "Add a step indicator on every screen: '2 of 4 · Profile' or a four-dot progress bar at top."
+    },
+
+    "intent.stated-features-present": {
+      "title": "PRD-stated guest checkout isn't designed",
+      "description": "The PRD requires 'guest checkout' for v1, but the uploaded checkout only shows authenticated-user paths.",
+      "suggestion": "Add a guest-checkout flow: how the unauthenticated user starts, what info is collected, where it diverges."
+    },
+    "intent.design-contradicts-prd": {
+      "title": "Design requires signup despite no-signup promise",
+      "description": "PRD states 'no signup required for first audit', but the audit page has a 'Sign up to continue' gate blocking access.",
+      "suggestion": "Reconcile: either remove the signup gate or update the PRD if signup is now actually required."
+    },
+    "intent.stated-goals-served": {
+      "title": "Signup impedes the PRD's <60s goal",
+      "description": "PRD's goal is 'signup completed in under 60 seconds'. The designed signup is five screens with optional fields shown as required.",
+      "suggestion": "Compress to one or two screens with only essentials. Move secondary fields to a post-signup profile step."
+    },
+    "intent.primary-journey-complete": {
+      "title": "Saved Recipes view isn't in the flow",
+      "description": "PRD's journey is 'discover → save → cook'. Uploaded screens cover Discover and Cook — Save and Saved Recipes are missing.",
+      "suggestion": "Is Save on a screen not uploaded? If not yet designed, add a Save affordance and a Saved Recipes view."
+    },
+    "intent.stated-constraints-respected": {
+      "title": "Mobile breakpoint absent despite mobile-first PRD",
+      "description": "PRD states 'mobile-first design', but every uploaded screen is desktop. The constraint isn't demonstrated.",
+      "suggestion": "Include mobile variants of key screens. For mobile-first, mobile should arguably be the canonical design."
+    },
+    "intent.user-types-served": {
+      "title": "Viewer role isn't represented in the design",
+      "description": "PRD identifies 'admin' and 'viewer' as distinct roles. Uploaded screens only show admin — viewer variants are missing where permissions matter.",
+      "suggestion": "Add viewer-role variants for permission-sensitive screens. Show how restricted actions appear (hidden vs. disabled)."
+    }
+  }
+}
