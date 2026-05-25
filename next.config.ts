@@ -6,7 +6,9 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=()"
+    // microphone=(self): allow voice-input only on our own origin (used for
+    // the audit-context dictation feature). camera and geolocation stay off.
+    value: "camera=(), microphone=(self), geolocation=()"
   },
   {
     key: "Content-Security-Policy",

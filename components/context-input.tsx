@@ -49,7 +49,7 @@ function voiceErrorMessage(code: string | undefined): string {
   switch (code) {
     case "not-allowed":
     case "permission-denied":
-      return "Microphone access was denied. Enable it in your browser settings.";
+      return "Microphone access was denied. Click the lock icon in the address bar, set Microphone to Allow, then reload.";
     case "no-speech":
       return "Didn't catch anything. Try speaking again, closer to the mic.";
     case "audio-capture":
