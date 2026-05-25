@@ -27,6 +27,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // @react-pdf/renderer ships partially-uncompiled code that breaks the
+  // Next.js build/runtime without explicit transpilation.
+  transpilePackages: ["@react-pdf/renderer"],
   // We don't want server-side request logs to capture API keys or uploaded content.
   // Vercel's default platform logs don't capture request bodies; we just avoid
   // anything custom that would.

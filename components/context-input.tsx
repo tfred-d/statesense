@@ -142,7 +142,7 @@ export function ContextInput({ value, onChange }: Props) {
         id="context"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="A short description of the feature works. A PRD works. Even a single line — 'A signup flow for first-time users, email + password, no social' — gives the audit much sharper PRD-alignment findings."
+        placeholder="A short description works. A PRD works. Even one line works. For example: 'A signup flow for first-time users, email and password, no social.' Context makes PRD-alignment findings much sharper."
         className="min-h-[140px]"
       />
 

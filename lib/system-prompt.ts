@@ -87,7 +87,9 @@ Submit results via the \`submit_audit\` tool. Findings are subject to strict wor
 
 Write tight first. If a sentence carries no new information beyond the title, delete it.
 
-Never reference heuristic IDs or category slugs in user-facing fields. Use natural UI language ("card", "field", "section") — not engineering jargon ("component", "affordance", "primary CTA").
+Never reference heuristic IDs or category slugs in user-facing fields. Use natural UI language ("card", "field", "section") rather than engineering jargon ("component", "affordance", "primary CTA").
+
+Do not use em dashes (—) anywhere in user-facing fields. Use periods, commas, colons, semicolons, or parentheses. Em dashes are an AI tell and reduce trust. This rule also applies to the summary field.
 
 For \`coverage_score\`: (applicable heuristics with no gap) / (total applicable heuristics) × 100, rounded to an integer.
 

@@ -13,7 +13,7 @@
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted-foreground: 0 0% 32%;
     --accent: 0 0% 96%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84% 60%;
@@ -51,13 +51,22 @@
   }
 }
 
-/* Subtle dotted background for landing hero. Fades toward the bottom edge. */
+/* Subtle dotted background for landing hero. Fades toward the bottom edge.
+   Uses a pseudo-element so the mask doesn't bleed onto content (buttons, text). */
 .hero-grid {
+  position: relative;
+  isolation: isolate;
+}
+.hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image: radial-gradient(circle at 1px 1px, hsl(var(--border)) 1px, transparent 0);
   background-size: 24px 24px;
-  background-position: 0 0;
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Drag-and-drop hover state on screen uploader */

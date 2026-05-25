@@ -6,9 +6,9 @@ export default function LandingPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="hero-grid relative">
+      <section className="hero-grid">
         <div className="container py-24 sm:py-32">
-          <div className="relative mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Catch the missing states before handoff.
             </h1>
@@ -31,7 +31,7 @@ export default function LandingPage() {
       </section>
 
       {/* Value props */}
-      <section className="border-t border-border bg-secondary/30 py-14">
+      <section className="bg-secondary/40 py-14">
         <div className="container grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
             <Crosshair className="h-6 w-6 text-primary" strokeWidth={1.5} />
@@ -44,14 +44,14 @@ export default function LandingPage() {
             <KeyRound className="h-6 w-6 text-primary" strokeWidth={1.5} />
             <h3 className="mt-3 font-semibold">No signup</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              No account, no waitlist. Bring your own Anthropic key and you&apos;re in.
+              No account, no waitlist. Bring your own API key and you&apos;re in.
             </p>
           </div>
           <div>
             <ShieldCheck className="h-6 w-6 text-primary" strokeWidth={1.5} />
             <h3 className="mt-3 font-semibold">Private</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Your screens go to Anthropic for analysis only. Never stored, never used to train.
+              Your screens aren&apos;t stored, and they&apos;re never used to train any model.
             </p>
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function LandingPage() {
         <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
         <ol className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-4">
           {[
-            { n: 1, title: "Add your key", body: "Anthropic API key, stored in your browser." },
+            { n: 1, title: "Add your key", body: "API key, stored locally in your browser." },
             { n: 2, title: "Upload screens", body: "1 to 6 of them, in order." },
             { n: 3, title: "Describe the feature", body: "Type a few lines or drop a PRD." },
             { n: 4, title: "Get the audit", body: "About 15 seconds." }

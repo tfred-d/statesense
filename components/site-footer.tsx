@@ -6,8 +6,8 @@ export function SiteFooter() {
       <div className="container py-8 text-sm text-muted-foreground">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            Your screens are sent to Anthropic for analysis, never stored by us, and
-            never used to train any model. Your API key stays in your browser.
+            We don&apos;t store your screens or use them to train any model. Your API key
+            stays in your browser.
           </p>
           <div className="flex items-center gap-4">
             <Link href="/privacy" className="hover:text-foreground">

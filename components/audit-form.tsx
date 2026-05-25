@@ -119,11 +119,11 @@ export function AuditForm({ apiKey }: Props) {
   }
 
   const disabledReason = !apiKey
-    ? "Add your Anthropic key above to run an audit."
+    ? "Add your API key above to run an audit."
     : screens.length === 0
       ? "Upload at least one screen."
       : !contextOk
-        ? "Add a sentence of context — what are we looking at?"
+        ? "Add a sentence of context: what are we looking at?"
         : null;
 
   return (

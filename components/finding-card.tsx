@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { cn, capitalize } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { setThumb, getThumbs } from "@/lib/storage";
 import type { Finding } from "@/lib/types";
 
@@ -29,27 +28,15 @@ export function FindingCard({ finding, initialThumb }: Props) {
       : "PRD-level";
 
   return (
-    <article className="py-5 first:pt-0 last:pb-0">
+    <article className="py-6 first:pt-0 last:pb-0">
       <header className="flex items-start justify-between gap-4">
         <div className="space-y-1.5">
-          <h3 className="font-semibold leading-tight">{finding.title}</h3>
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Badge variant={finding.finding_type}>{capitalize(finding.finding_type)}</Badge>
-            <Badge
-              variant={
-                finding.severity === "critical"
-                  ? "critical"
-                  : finding.severity === "important"
-                    ? "important"
-                    : "nice"
-              }
-            >
-              {finding.severity === "nice-to-have" ? "Nice to have" : capitalize(finding.severity)}
-            </Badge>
-            <span className="text-xs text-muted-foreground">{screenLabel}</span>
-            <span className="text-xs text-muted-foreground">·</span>
-            <span className="text-xs italic text-muted-foreground">{finding.element_anchor}</span>
-          </div>
+          <h3 className="text-lg font-semibold leading-snug">{finding.title}</h3>
+          <p className="text-xs text-muted-foreground">
+            <span>{screenLabel}</span>
+            <span className="mx-1.5">·</span>
+            <span className="italic">{finding.element_anchor}</span>
+          </p>
         </div>
         <div className="flex shrink-0 items-center gap-0.5">
           <button
@@ -79,11 +66,11 @@ export function FindingCard({ finding, initialThumb }: Props) {
         </div>
       </header>
 
-      <p className="mt-3 text-sm leading-relaxed">{finding.description}</p>
+      <p className="mt-3 text-sm leading-relaxed text-foreground/80">{finding.description}</p>
 
       <p className="mt-2 text-sm leading-relaxed">
         <span className="font-medium">Suggested:</span>{" "}
-        <span className="text-muted-foreground">{finding.suggestion}</span>
+        <span className="text-foreground/80">{finding.suggestion}</span>
       </p>
     </article>
   );

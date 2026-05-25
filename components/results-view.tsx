@@ -44,7 +44,7 @@ export function ResultsView({ result }: Props) {
     return (
       <div className="rounded-md border bg-card p-8 text-center">
         <Inbox className="mx-auto h-8 w-8 text-muted-foreground" />
-        <h3 className="mt-3 font-semibold">No findings — your design covers the applicable heuristics.</h3>
+        <h3 className="mt-3 font-semibold">No findings. Your design covers the applicable heuristics.</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Honest result. Nothing to flag.
         </p>
@@ -53,7 +53,7 @@ export function ResultsView({ result }: Props) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <header className="space-y-3">
         <p className="text-xs text-muted-foreground">
           {counts.gaps} gap{counts.gaps === 1 ? "" : "s"} ·{" "}
@@ -69,13 +69,13 @@ export function ResultsView({ result }: Props) {
         if (subset.length === 0) return null;
         return (
           <section key={scope}>
-            <h2 className="text-lg font-semibold tracking-tight">
+            <h2 className="mb-1 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               {SCOPE_LABEL[scope]}{" "}
-              <span className="text-sm font-normal text-muted-foreground">
+              <span className="ml-1 font-medium normal-case tracking-normal">
                 ({subset.length})
               </span>
             </h2>
-            <div className="mt-2 divide-y divide-border">
+            <div className="divide-y divide-border">
               {sortFindings(subset).map((f) => (
                 <FindingCard
                   key={f.id}

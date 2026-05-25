@@ -169,7 +169,7 @@ export function ApiKeyGate({ onReady }: Props) {
 
             <div className="flex justify-between gap-2">
               <Button variant="ghost" size="sm" onClick={handleForget}>
-                <LogOut className="h-3.5 w-3.5" /> Forget my key
+                <LogOut className="h-3.5 w-3.5" /> Remove my key
               </Button>
               <Button size="sm" onClick={() => setOpen(false)}>
                 Done

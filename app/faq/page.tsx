@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "Why bring my own API key?",
-    a: "Anthropic charges per call. Routing audits through your key means StateSense costs nothing to run, which is how we keep it free for everyone. Each audit costs roughly $0.05–$0.20 depending on screen count."
+    a: "Anthropic charges per call. Routing audits through your key means StateSense costs nothing to run, which is how we keep it free for everyone. Each audit costs roughly $0.05 to $0.20 depending on screen count."
   },
   {
     q: "Is my key safe?",
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Do my screens get stored?",
-    a: "No. They pass through our server in memory only — long enough to attach the audit prompt — and are then handed to Anthropic. Anthropic doesn't use API inputs for training."
+    a: "No. They pass through our server in memory only, long enough to attach the audit prompt, then they're handed to Anthropic. Anthropic doesn't use API inputs for training."
   },
   {
     q: "Why only Responsive Web?",
@@ -23,23 +23,19 @@ const faqs = [
   },
   {
     q: "How many screens can I upload?",
-    a: "1 to 6 screens, up to 5 MB each. Order matters — they're numbered as uploaded. Flow-scope heuristics activate when you upload two or more."
+    a: "1 to 6 screens, up to 5 MB each. Order matters: they're numbered as uploaded. Flow-scope heuristics activate when you upload two or more."
   },
   {
-    q: "What does the PRD upload do?",
-    a: "It activates the intent scope — checks that the design serves the features and constraints stated in the PRD. Without a PRD, only screen and flow scopes apply."
+    q: "What does the feature context do?",
+    a: "It activates the intent scope, which checks that the design serves the features and constraints stated in your description or PRD. Without context, only screen and flow scopes apply."
   },
   {
     q: "Can I share an audit?",
-    a: "Not as a live link in v1. Export to Markdown, PDF, or JSON and share the file. We don't store audits on the server — that's the privacy promise."
+    a: "Not as a live link in v1. Export to Markdown, PDF, or JSON and share the file. We don't store audits on the server. That's the privacy promise."
   },
   {
     q: "What if a finding is wrong?",
-    a: "Dismiss it. The dismiss state stays in your browser. Thumbs-down also helps us improve the library over time."
-  },
-  {
-    q: "What does coverage score mean?",
-    a: "The percentage of applicable heuristics where your design has no gap. 80+ is solid, 60–79 has room to improve, under 60 means several states aren't covered yet."
+    a: "Mark it thumbs-down. The state stays in your browser; nothing's collected on our side. Over time, low-rated heuristics will get tightened or cut."
   }
 ];
 
