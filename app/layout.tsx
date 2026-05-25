@@ -21,7 +21,9 @@ export const metadata: Metadata = {
   title: "StateSense — find the missing states in your designs",
   description:
     "Audit app designs for missing states and unhappy-path gaps before handoff. Free, BYOK, browser-only — your screens never touch our servers.",
-  metadataBase: new URL("https://statesense.app"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://statesense.vercel.app"
+  ),
   openGraph: {
     title: "StateSense",
     description:

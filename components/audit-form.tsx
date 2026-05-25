@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Play } from "lucide-react";
+import { KeyRound, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ApiKeyGate } from "./api-key-gate";
@@ -91,12 +91,6 @@ export function AuditForm() {
       }
 
       const data = (await res.json()) as { result: AuditResult };
-
-      if (!data.result || data.result.findings.length === 0) {
-        // Empty result is valid (design is clean) but we surface it so the user knows.
-        // ResultsView renders the empty-state UI itself.
-      }
-
       setState({ phase: "result", result: data.result });
     } catch (err) {
       setState({
@@ -114,42 +108,64 @@ export function AuditForm() {
     setState({ phase: "form" });
   }
 
+  // Loading or result phases swap the whole content. The form phase always
+  // renders — the API key gate is shown above it, the Run button is the only
+  // thing actually gated by having a key.
+  if (state.phase === "running") {
+    return (
+      <div className="space-y-6">
+        <ApiKeyGate onReady={setApiKey} />
+        <AuditSkeleton />
+      </div>
+    );
+  }
+
+  if (state.phase === "result") {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold tracking-tight">Audit results</h2>
+          <Button variant="outline" size="sm" onClick={resetForm}>
+            New audit
+          </Button>
+        </div>
+        <ResultsView result={state.result} />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <ApiKeyGate onReady={setApiKey} />
 
-      {!apiKey ? null : state.phase === "running" ? (
-        <AuditSkeleton />
-      ) : state.phase === "result" ? (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold tracking-tight">Audit results</h2>
-            <Button variant="outline" size="sm" onClick={resetForm}>
-              New audit
-            </Button>
-          </div>
-          <ResultsView result={state.result} />
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {state.phase === "error" && (
-            <>
-              <ErrorDisplay error={state.error} />
-              <Separator />
-            </>
-          )}
-          <PlatformSelector value={platform} onChange={setPlatform} />
-          <ScreenUploader value={screens} onChange={setScreens} />
-          <ContextInput value={context} onChange={setContext} />
-          <FocusSelector value={focusCategories} onChange={setFocusCategories} />
-
-          <div className="flex justify-end">
-            <Button onClick={runAudit} disabled={screens.length === 0}>
-              <Play className="h-4 w-4" /> Run audit
-            </Button>
-          </div>
-        </div>
+      {state.phase === "error" && (
+        <>
+          <ErrorDisplay error={state.error} />
+          <Separator />
+        </>
       )}
+
+      <PlatformSelector value={platform} onChange={setPlatform} />
+      <ScreenUploader value={screens} onChange={setScreens} />
+      <ContextInput value={context} onChange={setContext} />
+      <FocusSelector value={focusCategories} onChange={setFocusCategories} />
+
+      <div className="flex flex-col items-end gap-2">
+        <Button onClick={runAudit} disabled={!apiKey || screens.length === 0}>
+          <Play className="h-4 w-4" /> Run audit
+        </Button>
+        {!apiKey && (
+          <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <KeyRound className="h-3 w-3" />
+            Add your Anthropic key above to enable Run.
+          </p>
+        )}
+        {apiKey && screens.length === 0 && (
+          <p className="text-xs text-muted-foreground">
+            Upload at least one screen to enable Run.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

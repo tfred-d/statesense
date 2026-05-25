@@ -10,6 +10,9 @@ export function SiteHeader() {
         </Link>
         <nav className="flex items-center gap-1">
           <Button variant="ghost" size="sm" asChild>
+            <Link href="/sample">Sample</Link>
+          </Button>
+          <Button variant="ghost" size="sm" asChild>
             <Link href="/about">About</Link>
           </Button>
           <Button variant="ghost" size="sm" asChild>
