@@ -36,10 +36,13 @@ function sortFindings(findings: Finding[]): Finding[] {
 export function exportMarkdown(result: AuditResult): string {
   const lines: string[] = [];
 
+  const gaps = result.findings.filter((f) => f.finding_type === "gap").length;
+  const recs = result.findings.filter((f) => f.finding_type === "recommendation").length;
+  const qs = result.findings.filter((f) => f.finding_type === "question").length;
+
   lines.push("# StateSense audit");
   lines.push("");
-  lines.push(`**Coverage score:** ${result.coverage_score}/100`);
-  lines.push(`**Context tags:** ${result.context_tags_detected.join(", ") || "—"}`);
+  lines.push(`${gaps} gaps · ${recs} recommendations · ${qs} questions`);
   lines.push("");
   lines.push(result.summary);
   lines.push("");
@@ -64,16 +67,6 @@ export function exportMarkdown(result: AuditResult): string {
       lines.push("");
       lines.push(`**Suggested:** ${f.suggestion}`);
       lines.push("");
-    }
-  }
-
-  if (result.skipped_heuristics.length > 0) {
-    lines.push("---");
-    lines.push("");
-    lines.push("## Heuristics skipped");
-    lines.push("");
-    for (const s of result.skipped_heuristics) {
-      lines.push(`- \`${s.heuristic_id}\` — ${s.reason}`);
     }
   }
 

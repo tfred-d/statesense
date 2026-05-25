@@ -96,7 +96,15 @@ Step 4 — Submit the result via the submit_audit tool. Honor the word caps. Don
       );
     }
 
-    const result = toolUse.input as AuditResult;
+    const rawResult = toolUse.input as AuditResult;
+
+    // Strip skipped_heuristics before returning to the client. They reveal
+    // internal heuristic IDs and category structure — that's product IP.
+    // We keep the field on the result for schema consistency but empty it out.
+    const result: AuditResult = {
+      ...rawResult,
+      skipped_heuristics: []
+    };
 
     return NextResponse.json({
       result,

@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { KeyRound, Play } from "lucide-react";
+import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ApiKeyGate } from "./api-key-gate";
 import { PlatformSelector } from "./platform-selector";
 import { ScreenUploader } from "./screen-uploader";
-import { ContextInput } from "./context-input";
-import { FocusSelector } from "./focus-selector";
+import { ContextInput, CONTEXT_MIN_CHARS } from "./context-input";
 import { AuditSkeleton } from "./audit-skeleton";
 import { ResultsView } from "./results-view";
 import { ErrorDisplay } from "./error-display";
@@ -20,35 +18,29 @@ type RunState =
   | { phase: "result"; result: AuditResult }
   | { phase: "error"; error: AppError };
 
-export function AuditForm() {
-  const [apiKey, setApiKey] = useState<string | null>(null);
+interface Props {
+  /** API key controlled by the parent (AuditPageShell). Null until user adds one. */
+  apiKey: string | null;
+}
+
+export function AuditForm({ apiKey }: Props) {
   const [platform, setPlatform] = useState<Platform>("web");
   const [screens, setScreens] = useState<ScreenInput[]>([]);
   const [context, setContext] = useState("");
-  const [focusCategories, setFocusCategories] = useState<string[]>([]);
   const [state, setState] = useState<RunState>({ phase: "form" });
 
+  const contextOk = context.trim().length >= CONTEXT_MIN_CHARS;
+  const canRun = !!apiKey && screens.length > 0 && contextOk;
+
   async function runAudit() {
-    if (!apiKey) return;
-    if (screens.length === 0) {
-      setState({
-        phase: "error",
-        error: {
-          kind: "wrong-format",
-          message: "Add at least one screen.",
-          detail: "Drag or browse PNG / JPG / WEBP files into the upload area."
-        }
-      });
-      return;
-    }
+    if (!canRun || !apiKey) return;
 
     setState({ phase: "running" });
 
     const payload: AuditRequest = {
       screens,
       context: context.trim() || null,
-      platform,
-      focus_categories: focusCategories.length > 0 ? focusCategories : undefined
+      platform
     };
 
     try {
@@ -108,21 +100,13 @@ export function AuditForm() {
     setState({ phase: "form" });
   }
 
-  // Loading or result phases swap the whole content. The form phase always
-  // renders — the API key gate is shown above it, the Run button is the only
-  // thing actually gated by having a key.
   if (state.phase === "running") {
-    return (
-      <div className="space-y-6">
-        <ApiKeyGate onReady={setApiKey} />
-        <AuditSkeleton />
-      </div>
-    );
+    return <AuditSkeleton />;
   }
 
   if (state.phase === "result") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold tracking-tight">Audit results</h2>
           <Button variant="outline" size="sm" onClick={resetForm}>
@@ -134,10 +118,16 @@ export function AuditForm() {
     );
   }
 
+  const disabledReason = !apiKey
+    ? "Add your Anthropic key above to run an audit."
+    : screens.length === 0
+      ? "Upload at least one screen."
+      : !contextOk
+        ? "Add a sentence of context — what are we looking at?"
+        : null;
+
   return (
     <div className="space-y-6">
-      <ApiKeyGate onReady={setApiKey} />
-
       {state.phase === "error" && (
         <>
           <ErrorDisplay error={state.error} />
@@ -148,22 +138,13 @@ export function AuditForm() {
       <PlatformSelector value={platform} onChange={setPlatform} />
       <ScreenUploader value={screens} onChange={setScreens} />
       <ContextInput value={context} onChange={setContext} />
-      <FocusSelector value={focusCategories} onChange={setFocusCategories} />
 
       <div className="flex flex-col items-end gap-2">
-        <Button onClick={runAudit} disabled={!apiKey || screens.length === 0}>
+        <Button onClick={runAudit} disabled={!canRun}>
           <Play className="h-4 w-4" /> Run audit
         </Button>
-        {!apiKey && (
-          <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-            <KeyRound className="h-3 w-3" />
-            Add your Anthropic key above to enable Run.
-          </p>
-        )}
-        {apiKey && screens.length === 0 && (
-          <p className="text-xs text-muted-foreground">
-            Upload at least one screen to enable Run.
-          </p>
+        {disabledReason && (
+          <p className="text-xs text-muted-foreground">{disabledReason}</p>
         )}
       </div>
     </div>

@@ -70,9 +70,10 @@ function AuditDocument({ result }: { result: AuditResult }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <Text style={styles.h1}>StateSense audit</Text>
-        <Text style={styles.meta}>Coverage score: {result.coverage_score}/100</Text>
         <Text style={styles.meta}>
-          Context tags: {result.context_tags_detected.join(", ") || "—"}
+          {result.findings.filter((f) => f.finding_type === "gap").length} gaps ·{" "}
+          {result.findings.filter((f) => f.finding_type === "recommendation").length} recommendations ·{" "}
+          {result.findings.filter((f) => f.finding_type === "question").length} questions
         </Text>
         <Text style={styles.summary}>{result.summary}</Text>
 
@@ -101,16 +102,6 @@ function AuditDocument({ result }: { result: AuditResult }) {
           );
         })}
 
-        {result.skipped_heuristics.length > 0 && (
-          <View style={styles.skipped} wrap={false}>
-            <Text style={styles.h2}>Heuristics skipped</Text>
-            {result.skipped_heuristics.map((s) => (
-              <Text key={s.heuristic_id} style={styles.skippedItem}>
-                {s.heuristic_id} — {s.reason}
-              </Text>
-            ))}
-          </View>
-        )}
       </Page>
     </Document>
   );

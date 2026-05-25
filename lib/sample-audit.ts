@@ -165,54 +165,6 @@ export const SAMPLE_RESEND_AUDIT: AuditResult = {
       suggestion: "Add a back arrow or '← Emails' link above the email header, so users have an in-context exit."
     }
   ],
-  skipped_heuristics: [
-    {
-      heuristic_id: "auth.session-expired-mid-action",
-      reason: "No long-form editing surface in this flow."
-    },
-    {
-      heuristic_id: "auth.reauth-for-sensitive-action",
-      reason: "No destructive or sensitive actions visible."
-    },
-    {
-      heuristic_id: "validation.async-availability",
-      reason: "No form fields in this flow."
-    },
-    {
-      heuristic_id: "concurrency.stale-data-edit",
-      reason: "No collaborative editing surface."
-    },
-    {
-      heuristic_id: "recovery.confirm-irreversible",
-      reason: "No irreversible actions visible."
-    },
-    {
-      heuristic_id: "data.i18n-text-expansion",
-      reason: "No PRD provided; internationalization scope unclear."
-    },
-    {
-      heuristic_id: "intent.stated-features-present",
-      reason: "No PRD provided — intent scope skipped."
-    },
-    {
-      heuristic_id: "intent.design-contradicts-prd",
-      reason: "No PRD provided — intent scope skipped."
-    },
-    {
-      heuristic_id: "intent.stated-goals-served",
-      reason: "No PRD provided — intent scope skipped."
-    },
-    {
-      heuristic_id: "intent.primary-journey-complete",
-      reason: "No PRD provided — intent scope skipped."
-    },
-    {
-      heuristic_id: "intent.stated-constraints-respected",
-      reason: "No PRD provided — intent scope skipped."
-    },
-    {
-      heuristic_id: "intent.user-types-served",
-      reason: "No PRD provided — intent scope skipped."
-    }
-  ]
+  // Internal-only — never surfaced to the user. Kept for schema consistency.
+  skipped_heuristics: []
 };

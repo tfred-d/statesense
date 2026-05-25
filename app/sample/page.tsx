@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResultsView } from "@/components/results-view";
+import { SampleScreens } from "@/components/sample-screens";
 import { SAMPLE_RESEND_AUDIT } from "@/lib/sample-audit";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function SamplePage() {
         <p className="font-medium">This is a sample audit.</p>
         <p className="mt-1 text-muted-foreground">
           We ran StateSense on Resend&apos;s &ldquo;Sent Email Details&rdquo; flow. The 6 screens
-          are below. The 11 findings are below that.{" "}
+          are below — click any to enlarge. The findings are below that.{" "}
           <Link href="/audit" className="font-medium text-primary underline-offset-4 hover:underline">
             Run your own audit →
           </Link>
@@ -27,25 +27,21 @@ export default function SamplePage() {
       </div>
 
       <section className="mt-8">
-        <h2 className="text-sm font-semibold tracking-tight">Screens audited</h2>
-        <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-6">
-          {[0, 1, 2, 3, 4, 5].map((i) => (
-            <figure key={i} className="space-y-1.5">
-              <div className="overflow-hidden rounded-md border bg-card">
-                <Image
-                  src={`/sample/resend/screen-${i}.png`}
-                  alt={`Screen ${i}`}
-                  width={300}
-                  height={200}
-                  className="h-auto w-full"
-                />
-              </div>
-              <figcaption className="text-center text-xs text-muted-foreground">
-                Screen {i}
-              </figcaption>
-            </figure>
-          ))}
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-sm font-semibold tracking-tight">Screens audited</h2>
+          <p className="text-xs text-muted-foreground">
+            Screens via{" "}
+            <a
+              href="https://mobbin.com"
+              target="_blank"
+              rel="noreferrer"
+              className="underline-offset-4 hover:underline"
+            >
+              Mobbin
+            </a>
+          </p>
         </div>
+        <SampleScreens />
       </section>
 
       <section className="mt-10">

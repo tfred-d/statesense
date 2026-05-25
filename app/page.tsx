@@ -1,29 +1,31 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Crosshair, KeyRound, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="container py-24 sm:py-32">
-        <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Catch the missing states before handoff.
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Upload your screens. Get a checklist of the empty, error, and edge-case
-            states your design hasn&apos;t covered yet.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button size="lg" asChild>
-              <Link href="/audit">
-                Run an audit <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/sample">See a sample</Link>
-            </Button>
+      <section className="hero-grid relative">
+        <div className="container py-24 sm:py-32">
+          <div className="relative mx-auto max-w-2xl text-center">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+              Catch the missing states before handoff.
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Upload your screens. Get a checklist of the empty, error, and edge-case
+              states your design hasn&apos;t covered yet.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button size="lg" asChild>
+                <Link href="/audit">
+                  Run an audit <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/sample">See a sample</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -32,19 +34,22 @@ export default function LandingPage() {
       <section className="border-t border-border bg-secondary/30 py-14">
         <div className="container grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
-            <h3 className="font-semibold">Specific</h3>
+            <Crosshair className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            <h3 className="mt-3 font-semibold">Specific</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Every finding points to a screen and an element. No vague advice.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold">Costs cents</h3>
+            <KeyRound className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            <h3 className="mt-3 font-semibold">No signup</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Bring your own Anthropic key. About 5 to 20 cents per audit.
+              No account, no waitlist. Bring your own Anthropic key and you&apos;re in.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold">Private</h3>
+            <ShieldCheck className="h-6 w-6 text-primary" strokeWidth={1.5} />
+            <h3 className="mt-3 font-semibold">Private</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               Your screens go to Anthropic for analysis only. Never stored, never used to train.
             </p>

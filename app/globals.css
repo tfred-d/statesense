@@ -51,6 +51,15 @@
   }
 }
 
+/* Subtle dotted background for landing hero. Fades toward the bottom edge. */
+.hero-grid {
+  background-image: radial-gradient(circle at 1px 1px, hsl(var(--border)) 1px, transparent 0);
+  background-size: 24px 24px;
+  background-position: 0 0;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+}
+
 /* Drag-and-drop hover state on screen uploader */
 .uploader-active {
   @apply border-primary bg-secondary/40;
