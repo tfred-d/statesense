@@ -13,7 +13,11 @@ const securityHeaders = [
     // Allow Cloudflare Web Analytics beacon. No third-party scripts on /audit.
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' static.cloudflareinsights.com",
+      // 'wasm-unsafe-eval' is required by @react-pdf/renderer, which uses
+      // WebAssembly (Yoga layout engine) under the hood. The directive is
+      // narrower than 'unsafe-eval' — it only permits WASM compilation,
+      // not arbitrary JS eval.
+      "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' static.cloudflareinsights.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
       "font-src 'self'",

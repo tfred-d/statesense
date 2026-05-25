@@ -25,9 +25,15 @@ type SpeechRecognitionLike = {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
-  onresult: ((e: { resultIndex: number; results: ArrayLike<{ 0: { transcript: string }; isFinal: boolean }> }) => void) | null;
+  onresult:
+    | ((e: {
+        resultIndex: number;
+        results: ArrayLike<{ 0: { transcript: string }; isFinal: boolean }>;
+      }) => void)
+    | null;
   onerror: ((e: { error?: string }) => void) | null;
   onend: (() => void) | null;
+  onstart: (() => void) | null;
 };
 
 function getSpeechRecognitionCtor(): { new (): SpeechRecognitionLike } | null {
@@ -39,12 +45,33 @@ function getSpeechRecognitionCtor(): { new (): SpeechRecognitionLike } | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
+function voiceErrorMessage(code: string | undefined): string {
+  switch (code) {
+    case "not-allowed":
+    case "permission-denied":
+      return "Microphone access was denied. Enable it in your browser settings.";
+    case "no-speech":
+      return "Didn't catch anything. Try speaking again, closer to the mic.";
+    case "audio-capture":
+      return "No microphone detected on this device.";
+    case "network":
+      return "Network error during voice recognition. Check your connection.";
+    case "service-not-allowed":
+      return "Voice recognition isn't available right now.";
+    case "aborted":
+      return ""; // user-initiated stop; not an error to display
+    default:
+      return code ? `Voice input failed (${code}).` : "Voice input failed.";
+  }
+}
+
 export function ContextInput({ value, onChange }: Props) {
   const [parsing, setParsing] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<AppError | null>(null);
   const [recording, setRecording] = useState(false);
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const baseTextRef = useRef<string>("");
   const pdfInputRef = useRef<HTMLInputElement>(null);
@@ -89,40 +116,63 @@ export function ContextInput({ value, onChange }: Props) {
       return;
     }
 
+    setVoiceError(null);
+
     const SR = getSpeechRecognitionCtor();
-    if (!SR) return;
+    if (!SR) {
+      setVoiceError("Voice input isn't supported in this browser.");
+      return;
+    }
 
-    const r = new SR();
-    r.continuous = true;
-    r.interimResults = true;
-    r.lang = "en-US";
+    try {
+      const r = new SR();
+      r.continuous = true;
+      r.interimResults = true;
+      r.lang = "en-US";
 
-    baseTextRef.current = value;
-    let finalChunk = "";
+      baseTextRef.current = value;
+      let finalChunk = "";
 
-    r.onresult = (event) => {
-      let interim = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        const transcript = result[0].transcript;
-        if (result.isFinal) {
-          finalChunk += transcript;
-          if (!finalChunk.endsWith(" ")) finalChunk += " ";
-        } else {
-          interim += transcript;
+      r.onstart = () => {
+        setRecording(true);
+      };
+
+      r.onresult = (event) => {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          const transcript = result[0].transcript;
+          if (result.isFinal) {
+            finalChunk += transcript;
+            if (!finalChunk.endsWith(" ")) finalChunk += " ";
+          } else {
+            interim += transcript;
+          }
         }
-      }
-      const base = baseTextRef.current;
-      const sep = base && !base.endsWith(" ") && !base.endsWith("\n") ? " " : "";
-      onChange((base + sep + finalChunk + interim).trim());
-    };
+        const base = baseTextRef.current;
+        const sep = base && !base.endsWith(" ") && !base.endsWith("\n") ? " " : "";
+        onChange((base + sep + finalChunk + interim).trim());
+      };
 
-    r.onerror = () => setRecording(false);
-    r.onend = () => setRecording(false);
+      r.onerror = (e) => {
+        const msg = voiceErrorMessage(e.error);
+        if (msg) setVoiceError(msg);
+        setRecording(false);
+      };
 
-    recognitionRef.current = r;
-    r.start();
-    setRecording(true);
+      r.onend = () => {
+        setRecording(false);
+      };
+
+      recognitionRef.current = r;
+      r.start();
+    } catch (err) {
+      console.error("Speech recognition init failed:", err);
+      setVoiceError(
+        err instanceof Error ? err.message : "Couldn't start voice input."
+      );
+      setRecording(false);
+    }
   }
 
   const tooShort = value.trim().length > 0 && value.trim().length < CONTEXT_MIN_CHARS;
@@ -214,6 +264,10 @@ export function ContextInput({ value, onChange }: Props) {
           </span>
         )}
       </div>
+
+      {voiceError && (
+        <p className="text-xs text-amber-600">{voiceError}</p>
+      )}
 
       {tooShort && (
         <p className="text-xs text-amber-600">

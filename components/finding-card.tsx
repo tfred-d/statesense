@@ -28,9 +28,9 @@ export function FindingCard({ finding, initialThumb }: Props) {
       : "PRD-level";
 
   return (
-    <article className="py-6 first:pt-0 last:pb-0">
+    <article className="py-5 first:pt-0 last:pb-0">
       <header className="flex items-start justify-between gap-4">
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           <h3 className="text-lg font-semibold leading-snug">{finding.title}</h3>
           <p className="text-xs text-muted-foreground">
             <span>{screenLabel}</span>
@@ -66,9 +66,9 @@ export function FindingCard({ finding, initialThumb }: Props) {
         </div>
       </header>
 
-      <p className="mt-3 text-sm leading-relaxed text-foreground/80">{finding.description}</p>
+      <p className="mt-2 text-sm leading-normal text-foreground/80">{finding.description}</p>
 
-      <p className="mt-2 text-sm leading-relaxed">
+      <p className="mt-1.5 text-sm leading-normal">
         <span className="font-medium">Suggested:</span>{" "}
         <span className="text-foreground/80">{finding.suggestion}</span>
       </p>
