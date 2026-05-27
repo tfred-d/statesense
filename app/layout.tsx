@@ -30,6 +30,12 @@ export const metadata: Metadata = {
       "Find missing states and unhappy-path gaps in your designs before handoff.",
     type: "website"
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "StateSense",
+    description:
+      "Find missing states and unhappy-path gaps in your designs before handoff."
+  },
   robots: { index: true, follow: true }
 };
 
