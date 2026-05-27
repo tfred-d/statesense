@@ -9,6 +9,7 @@ import { ScreenUploader } from "./screen-uploader";
 import { ContextInput, CONTEXT_MIN_CHARS } from "./context-input";
 import { AuditSkeleton } from "./audit-skeleton";
 import { ResultsView } from "./results-view";
+import { AuditInputsSummary } from "./audit-inputs-summary";
 import { ErrorDisplay } from "./error-display";
 import type { AppError, AuditRequest, AuditResult, Platform, ScreenInput } from "@/lib/types";
 
@@ -97,6 +98,10 @@ export function AuditForm({ apiKey }: Props) {
   }
 
   function resetForm() {
+    // "New audit" is a clean slate — clear the previous inputs too.
+    setScreens([]);
+    setContext("");
+    setPlatform("web");
     setState({ phase: "form" });
   }
 
@@ -107,12 +112,13 @@ export function AuditForm({ apiKey }: Props) {
   if (state.phase === "result") {
     return (
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between print:hidden">
           <h2 className="text-xl font-semibold tracking-tight">Audit results</h2>
           <Button variant="outline" size="sm" onClick={resetForm}>
             New audit
           </Button>
         </div>
+        <AuditInputsSummary screens={screens} context={context} />
         <ResultsView result={state.result} />
       </div>
     );

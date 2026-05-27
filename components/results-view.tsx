@@ -55,6 +55,9 @@ export function ResultsView({ result }: Props) {
   return (
     <div className="space-y-10">
       <header className="space-y-3">
+        <h1 className="hidden text-xl font-bold tracking-tight print:block">
+          StateSense audit
+        </h1>
         <p className="text-xs text-muted-foreground">
           {counts.gaps} gap{counts.gaps === 1 ? "" : "s"} ·{" "}
           {counts.recs} recommendation{counts.recs === 1 ? "" : "s"} ·{" "}

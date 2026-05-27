@@ -28,7 +28,7 @@ export function FindingCard({ finding, initialThumb }: Props) {
       : "PRD-level";
 
   return (
-    <article className="py-5 first:pt-0 last:pb-0">
+    <article className="py-5 first:pt-0 last:pb-0 print:break-inside-avoid">
       <header className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <h3 className="text-lg font-semibold leading-snug">{finding.title}</h3>
@@ -38,7 +38,7 @@ export function FindingCard({ finding, initialThumb }: Props) {
             <span className="italic">{finding.element_anchor}</span>
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="flex shrink-0 items-center gap-0.5 print:hidden">
           <button
             type="button"
             aria-label="Useful"

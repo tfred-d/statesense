@@ -74,6 +74,18 @@
   @apply border-primary bg-secondary/40;
 }
 
+/* Print / save-as-PDF: white background, no page chrome (chrome elements use
+   the Tailwind `print:hidden` variant). Keeps findings from splitting mid-card. */
+@media print {
+  body {
+    background: #fff;
+  }
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+}
+
 /* Skeleton shimmer */
 .skeleton {
   @apply relative overflow-hidden bg-muted rounded;
