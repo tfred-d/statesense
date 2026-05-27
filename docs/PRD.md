@@ -3,7 +3,19 @@
 **Version:** v1.0 (launch scope)
 **Author:** Theo
 **Last updated:** 2026-05-04
-**Target ship date:** None — sequence, not calendar. Phases gated by the quality milestone.
+**Target ship date:** None — sequence, not calendar. Live 2026-05-27.
+
+---
+
+> **Spec deltas since v1.0.** This is the original v1 spec. Several decisions evolved during the build — the authoritative record is `DECISIONS.md` (newest first); v2 direction is in `docs/STRATEGY.md`. Notable changes:
+> - **Voice input** — was a non-goal (§3); now implemented on the context field.
+> - **Feature context** — was optional (§5); now required (a one-liner suffices).
+> - **Heuristic-focus selector** — planned (§5); removed (exposed category names = IP leak; server-side `applies_when` handles scoping).
+> - **Skipped heuristics** — were to be surfaced to users (§8); now kept internal, stripped from the response and exports.
+> - **Coverage score** — shown per §5/§8; removed from the UI (still computed in the schema).
+> - **PDF export** — was `@react-pdf` client render (§F5); now browser print-to-PDF.
+> - **Analytics** — Cloudflare Web Analytics (cookieless, env-driven), not Plausible.
+> - **Live:** statesense.vercel.app · **Repo:** github.com/tfred-d/statesense
 
 ---
 

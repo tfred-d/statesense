@@ -6,6 +6,55 @@ Use this to record decisions as they're made, so future sessions (and future The
 
 ---
 
+## 2026-05-27 · v2 direction — verification layer, not Figma-handoff tool
+
+**Decision:** Captured a strategic reframe in `docs/STRATEGY.md` rather than acting on it now. Trigger: the question "if coding agents already handle edge cases, what's StateSense for?"
+
+**The short version:**
+- Screen-scope heuristics partially overlap with what coding agents emit; flow-scope and intent-scope do not, and intent grows in value.
+- The real shift is generation up / human review down → verification becomes the bottleneck → a systematic checker is more useful, not less.
+- The moat is the same original bet: curated library > naive prompt to the same model. **Before any v2 investment, run the comparison** (StateSense vs. "find the gaps" prompt on the same flow). That experiment gates everything.
+- The product's *job* holds; the *packaging* (standalone webapp) is the vulnerable part. Likely v2 = embed the audit in the agent loop as a Claude skill / MCP server. The pipeline already lives in `lib/`, well-positioned for this.
+
+Full reasoning in `docs/STRATEGY.md`.
+
+---
+
+## 2026-05-27 · Build → polish → deploy — consolidated decisions
+
+Captures the calls made while building the app and iterating on Theo's feedback. The app is now live at **statesense.vercel.app** (GitHub: tfred-d/statesense).
+
+**IP-protection removals (don't leak the library to users):**
+- **Heuristic-focus selector cut entirely.** It exposed all 21 category names. `applies_when` pre-filtering already runs server-side, so a manual scope wasn't needed. (This was hard-cut #1 anyway.)
+- **`skipped_heuristics` no longer surfaced.** Stripped from the `/api/audit` response, the UI, and all exports. It revealed heuristic IDs + category slugs. Field stays on the schema for possible future server-side telemetry. (Reverses PRD §8's "skipped heuristics are surfaced" principle.)
+- **JSON export sanitized** to mirror the Markdown content — no `heuristic_id`, `audit_id`, or `context_tags_detected`.
+- **Coverage score removed from the UI.** Arbitrary number that drove no action. Still computed in the schema; just not shown.
+
+**PDF: reversed @react-pdf → browser print-to-PDF.** @react-pdf generated overlapping, unreadable output and is a fragile ~500KB dependency. Replaced with `window.print()` + print styles (`print:hidden` on chrome, `print:break-inside-avoid` on cards, a print-only title). More reliable, user controls the output, dependency removed from package.json + lockfile.
+
+**Voice input added — overrides the original PRD non-goal.** Web Speech API dictation on the context field, feature-detected (Chrome/Edge/Safari yes, Firefox no). PRD §3 had listed voice input as a non-goal; it was cheap to add via the browser API and supports the "always give context" requirement.
+
+**Feature context is now required (min ~20 chars), was optional.** A PRD upload satisfies it, or a one-liner. Activates intent-scope reliably and prevents thin audits.
+
+**Analytics: Cloudflare Web Analytics, not Vercel's built-in.** Both are cookieless and free-at-our-scale; neither risks the $0 rule (Vercel Hobby caps but never bills). Chose Cloudflare for the genuinely unlimited free tier. The integration is env-driven (`NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN`); the component no-ops without a token. Required two CSP fixes: allow `static.cloudflareinsights.com` (script) **and** apex `cloudflareinsights.com` (the RUM data POST).
+
+**Microphone Permissions-Policy fix.** The header shipped `microphone=()` (deny-all), which blocked voice before the browser could prompt. Changed to `microphone=(self)`.
+
+**UX iterations (from Theo's live testing):**
+- Progressive (timed, not live) phase labels during the audit wait, replacing a static skeleton caption.
+- "Audited" inputs summary above results — screen thumbnails (click to enlarge) + collapsible context.
+- Shared `ScreenLightbox` (click-to-enlarge + prev/next + arrow keys) used by both the sample page and the audit results.
+- Sample audit page at `/sample` (Resend flow, 11 hand-crafted findings) as the landing proof.
+- Landing copy tightened + de-vendored ("API key", not "Anthropic"); "No signup" USP instead of "Costs cents"; icons + subtle hero dot-grid; darker body contrast.
+- Em dashes scrubbed from copy + an explicit no-em-dash rule added to the system prompt (AI tell).
+- "Built by Theophilus Fredrick" on /about; custom 1200×630 og:image.
+
+**Deferred to post-launch:** per-session audit history. Storing audits means storing base64 screens (multi-MB), which exceeds localStorage limits — needs IndexedDB + a history UI. Real fast-follow, wrong thing to rush.
+
+**Stack cleanup:** dropped `@react-pdf/renderer` (and `transpilePackages` config). shadcn-style primitives written directly rather than via the CLI.
+
+---
+
 ## 2026-05-25 · Phase 2 + Phase 3 built — implementation choices
 
 **Decision:** Built the entire Next.js pipeline in one sweep — landing, audit, results, exports, error states, static pages — in parallel with (not after) the quality gate. The two manual audits we ran in conversation suggested the library is in good shape, and the user explicitly authorized the parallel build.

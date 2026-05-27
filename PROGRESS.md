@@ -1,6 +1,7 @@
 # StateSense — Progress Tracker
 
 **Launch target:** None — moving at the maintainer's pace. Sequence > calendar.
+**Status:** v1 feature-complete and deployed to https://statesense.vercel.app
 
 Update by checking items as they complete. Keep notes per phase brief; full rationale goes in `DECISIONS.md`.
 
@@ -9,86 +10,80 @@ Update by checking items as they complete. Keep notes per phase brief; full rati
 - [x] Critique outline
 - [x] Resolve open product questions (distribution, BYOK, exports, scope, privacy)
 - [x] Write PRD (`docs/PRD.md`)
-- [x] Set up project scaffolding (CLAUDE.md, STATE.md, this file, DECISIONS.md, folders)
+- [x] Set up project scaffolding
 
-## Phase 1 — Heuristic library + quality gate
-
-**Goal:** prove the heuristic library + system prompt produce sharp findings before any UI is built.
+## Phase 1 — Heuristic library + prompt (done)
 
 ### Library authoring (v1.2.0)
-- [x] Lock heuristic schema (with scope, applies_when, default_finding_type)
-- [x] Author screen-scope heuristics — 53 across 19 categories
-- [x] Author flow-scope heuristics — 6 (flow-coherence)
-- [x] Author intent-scope heuristics — 6 (prd-alignment)
-- [x] Generate SUMMARY.md for fast review
-- [x] Update output schema in PRD §8 (scope + finding_type per finding)
-- [x] Critical self-review pass + 3 additions (above-the-fold-value, progress-indication, required-vs-optional-signal)
-- [x] Write FINDING_VOICE.md — output language spec
-- [x] Author examples.json — 65 example findings, one per heuristic, in a separate file to keep heuristics.json stable
-- [x] Add strict output schema to PRD §8 — required fields including element_anchor
-- [x] Tighten examples.json + add concision rules to FINDING_VOICE.md (≤8/≤30/≤20 word caps)
-- [x] Cross-file consistency review + lock build-readiness decisions (analytics, structured output, cache TTL, streaming, key validation)
-- [ ] **Theo reviews v1.2.0 library** — edits, cuts, additions
+- [x] Lock schema (scope, applies_when, default_finding_type)
+- [x] Author 65 heuristics — 53 screen + 6 flow + 6 intent, 21 categories
+- [x] SUMMARY.md, FINDING_VOICE.md, examples.json (65, with ≤8/≤30/≤20 word caps)
+- [x] Strict output schema in PRD §8 (element_anchor + screen_refs via tool-use)
+- [x] Cross-file consistency review + build-readiness decisions
+- [x] Theo reviewed and approved the library
 
 ### Prompt + CLI
-- [x] Design v1 system prompt (`lib/system-prompt.ts`) — anchor-or-skip; tool-use JSON; loads heuristics + examples + voice spec
-- [x] Build CLI script (`scripts/audit.ts`) — runs audit against image + text inputs, writes `actual_findings.json`
-- [x] Validate JSON output schema via tool-use `input_schema` (`lib/audit-schema.ts`)
-- [x] Set up Node/TypeScript scaffold (`package.json`, `tsconfig.json`, `.env.example`, `.gitignore`)
-- [x] Refactor: CLI and Next.js app share `lib/` as the canonical source for prompt + schema + types
-- [ ] First end-to-end CLI run (needs `npm install` + Anthropic key in `.env`)
+- [x] System prompt (`lib/system-prompt.ts`) — anchor-or-skip, tool-use JSON, no-em-dash rule
+- [x] CLI (`scripts/audit.ts`), tool-use schema (`lib/audit-schema.ts`)
+- [x] Node/TS scaffold; CLI + app share `lib/` as canonical source
 
 ### Quality gate
-- [x] Sample flow 1 — `samples/linear/` (Linear AI Chat, 4 screens, context.md ✓)
-- [x] Sample flow 2 — `samples/resend/` (Resend Sent Email Details, 6 screens, context.md ✓)
-- [ ] Sample flow 3 — form-with-validation (signup / settings / payment form)
-- [ ] Sample flow 4 — payment or transaction flow
-- [ ] Sample flow 5 — content creation (compose / editor / publishing)
-- [ ] For each flow: write `expected_findings.md` (hand-judged ground truth)
-- [ ] Run audits via CLI; rate each finding for specific / accurate / actionable in `rating.md`
-- [ ] Iterate prompt + library until ≥70% pass
-- [ ] **🚦 EXIT GATE — UI work blocked until this passes**
+- [x] Two sample flows with context.md (`samples/linear/`, `samples/resend/`)
+- [~] **Formal 5-flow scored gate NOT run.** Superseded by live-app validation against the in-conversation benchmark audits (Theo's call — judged good enough to proceed). CLI retained for future regression runs. 3 more sample flows + per-flow `expected_findings.md` / `rating.md` remain available if a rigorous gate is wanted later.
 
-## Phase 2 — Core app
+## Phase 2 — Core app (done)
 
-- [x] Next.js 15 scaffold with Tailwind + shadcn-style UI (primitives written directly, no CLI install)
-- [x] Security headers (CSP, X-Frame-Options, etc.) in `next.config.ts`
-- [x] API key entry + `localStorage` handling (`components/api-key-gate.tsx`, `lib/storage.ts`)
+- [x] Next.js 15 + Tailwind + shadcn-style UI (primitives written directly)
+- [x] Security headers (CSP, Permissions-Policy mic=self, X-Frame-Options, etc.)
+- [x] BYOK key entry as button + modal (`api-key-gate.tsx`, `lib/storage.ts`)
 - [x] Key validation — Haiku 4.5 ping via `/api/validate-key`
-- [x] Audit page UI: platform selector (web only; iOS/Android disabled), screen uploader (drag-drop, 1–6), context input (textarea + client-side PDF)
-- [x] Heuristic-focus selector (default: All, scopable by category)
-- [x] API route `/api/audit` with tool-use + prompt caching wired
-- [x] Results view: findings grouped by scope → severity, thumbs/dismiss/exports
-- [x] Coverage score, skipped-heuristics list, audit summary
-- [x] All PRD §F6 error states with typed ErrorKind + dedicated icons + concrete copy
-- [ ] Vercel deploy (verify free tier + env vars)
+- [x] Audit UI: platform selector (web only), screen uploader (1–6, drag-drop), required context (text / PDF / voice)
+- [x] ~~Heuristic-focus selector~~ — built, then **removed** (exposed category names = IP leak; server-side `applies_when` handles scoping)
+- [x] `/api/audit` with tool-use + prompt caching; strips `skipped_heuristics` from response
+- [x] Results: grouped by scope → severity, thumbs, audited-inputs summary, click-to-enlarge lightbox
+- [x] ~~Coverage score / skipped-heuristics list~~ — **removed** from UI + exports (arbitrary / IP leak); coverage still computed in schema
+- [x] All PRD §F6 error states (typed ErrorKind + icons + concrete copy)
+- [x] Vercel deploy — live, auto-deploys on push to `main`
 
 ## Phase 3 — Polish, exports, launch
 
-- [x] Markdown export (copy to clipboard) — `lib/export-markdown.ts`
-- [x] PDF export via `@react-pdf/renderer` — `lib/export-pdf.tsx`
-- [x] JSON export (download)
-- [x] Landing page — value props, how-it-works, CTA
-- [x] Privacy / FAQ / About pages
-- [x] Cloudflare Web Analytics integration (cookieless, no PII)
-- [ ] 5–10 friendly-user tests; iterate on copy and findings rendering
-- [ ] Final privacy review of every dependency (run after `npm install`)
-- [ ] Launch checklist (domain, robots, sitemap, og image)
-- [ ] **🚀 LAUNCH**
+- [x] Markdown export (copy to clipboard)
+- [x] PDF export — **browser print-to-PDF** (dropped @react-pdf; print styles strip chrome)
+- [x] JSON export (sanitized — no heuristic IDs / internal fields)
+- [x] Landing page (icons, hero dot-grid, "No signup" USP, de-vendored copy)
+- [x] Sample audit page `/sample` (Resend flow, click-to-enlarge, Mobbin credit)
+- [x] Privacy / FAQ / About (+ "Built by Theophilus Fredrick")
+- [x] Custom og:image (1200×630)
+- [x] Progressive audit loading state (timed phases)
+- [x] Cloudflare Web Analytics integration (code; cookieless)
+- [ ] **Theo: paste Cloudflare token into Vercel env + verify beacon in Network tab**
+- [ ] 5–10 friendly-user tests
+- [ ] Mobile / Safari spot-check
+- [ ] Final dependency privacy sniff (`npm ls`; confirm no analytics on `/audit`)
+- [ ] robots.txt + sitemap (optional for launch)
+- [ ] Custom domain (optional — on vercel.app for now)
 
-## Hard-cuts list (in order, if scope creeps)
+## v2 — see `docs/STRATEGY.md`
 
-1. Heuristic-focus selector (default to "All", remove the UI)
-2. "Dismiss finding" action
-3. PDF export (markdown + JSON ship)
-4. Landing-page live sample audit (replace with static screenshots)
+- [ ] **Moat test first:** StateSense vs. naive "find the gaps" prompt on the same flow. Gates everything.
+- [ ] If it passes: prototype the **agent-embedded form factor** (Claude skill / MCP server) — pipeline already in `lib/`
+- [ ] Reposition copy toward "before you ship" (verification layer)
 
-## Post-launch backlog (do not start before launch)
+## Hard-cuts list (applied / remaining)
+
+1. ~~Heuristic-focus selector~~ — **cut** (also an IP win)
+2. ~~"Dismiss finding" action~~ — **cut** (thumbs-down is the feedback path)
+3. ~~PDF export via heavy lib~~ — replaced with print-to-PDF (kept the capability, dropped the dependency)
+4. Landing live sample audit → shipped as a static hand-crafted `/sample` (no recurring cost)
+
+## Post-launch backlog
 
 - iOS + Android heuristic libraries
-- Figma plugin (likely v2 distribution play)
+- **Agent-embedded audit (Claude skill / MCP)** — likely the real v2 distribution play; see STRATEGY.md
+- Figma plugin (lesser alternative now)
 - Hosted free tier (StateSense pays for first N audits)
-- Notion / Linear / Jira native export (build the most-requested first)
+- Notion / Linear / Jira native export
 - Custom heuristics — let teams add their own
-- Shareable audit links (with explicit opt-in storage)
+- Shareable audit links (needs server storage; revisit privacy model)
+- Per-session audit history (needs IndexedDB — base64 screens exceed localStorage)
 - Comparison mode: re-run after design changes, diff findings
