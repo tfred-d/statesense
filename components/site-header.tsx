@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export function SiteHeader() {
   return (
-    <header className="bg-background print:hidden">
+    <header className="sticky top-0 z-40 bg-background print:hidden">
       <div className="container flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <span className="text-base tracking-tight">StateSense</span>
