@@ -76,24 +76,22 @@ export default function LandingPage() {
             className="absolute left-[12.5%] right-[12.5%] top-4 hidden h-px bg-border sm:block"
             aria-hidden
           />
-          {/* Mobile: vertical line down the node rail. */}
-          <div
-            className="absolute left-4 top-5 bottom-5 w-px -translate-x-1/2 bg-border sm:hidden"
-            aria-hidden
-          />
           <ol className="grid grid-cols-1 gap-8 sm:grid-cols-4 sm:gap-6">
-            {STEPS.map((s) => (
-              <li
-                key={s.n}
-                className="relative flex items-center gap-4 sm:flex-col sm:gap-0 sm:text-center"
-              >
+            {STEPS.map((s, idx) => (
+              <li key={s.n} className="relative flex flex-col items-center text-center">
                 <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-muted-foreground">
                   {s.n}
                 </div>
-                <div className="sm:mt-4">
-                  <h3 className="font-semibold">{s.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
-                </div>
+                <h3 className="mt-4 font-semibold">{s.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
+                {/* Mobile connector: from the base of this step down to the top
+                    of the next node (spans the gap-8 = 2rem gutter). */}
+                {idx < STEPS.length - 1 && (
+                  <span
+                    className="absolute left-1/2 top-full h-8 w-px -translate-x-1/2 bg-border sm:hidden"
+                    aria-hidden
+                  />
+                )}
               </li>
             ))}
           </ol>
@@ -103,7 +101,7 @@ export default function LandingPage() {
       {/* CTA — dark card, contained on desktop, full-bleed on mobile */}
       <section className="py-16">
         <div className="container">
-          <div className="-mx-4 bg-primary px-6 py-14 text-center text-primary-foreground sm:mx-0 sm:rounded-2xl">
+          <div className="-mx-6 bg-primary px-6 py-14 text-center text-primary-foreground sm:mx-0 sm:rounded-2xl">
             <h2 className="text-2xl font-semibold tracking-tight">Audit your next feature.</h2>
             <p className="mx-auto mt-2 max-w-md text-balance text-sm text-primary-foreground/70">
               Drop in your screens. See what an extra pair of eyes would catch.
