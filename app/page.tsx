@@ -77,21 +77,13 @@ export default function LandingPage() {
             aria-hidden
           />
           <ol className="grid grid-cols-1 gap-8 sm:grid-cols-4 sm:gap-6">
-            {STEPS.map((s, idx) => (
+            {STEPS.map((s) => (
               <li key={s.n} className="relative flex flex-col items-center text-center">
                 <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-medium text-muted-foreground">
                   {s.n}
                 </div>
                 <h3 className="mt-4 font-semibold">{s.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
-                {/* Mobile connector: from the base of this step down to the top
-                    of the next node (spans the gap-8 = 2rem gutter). */}
-                {idx < STEPS.length - 1 && (
-                  <span
-                    className="absolute left-1/2 top-full h-8 w-px -translate-x-1/2 bg-border sm:hidden"
-                    aria-hidden
-                  />
-                )}
               </li>
             ))}
           </ol>
