@@ -28,8 +28,8 @@ export function SampleScreens() {
               <Image
                 src={`/sample/resend/screen-${i}.png`}
                 alt={`Screen ${i}`}
-                width={300}
-                height={200}
+                width={1920}
+                height={1200}
                 className="h-auto w-full"
               />
             </button>
