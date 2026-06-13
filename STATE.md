@@ -1,7 +1,7 @@
 # StateSense — Current State
 
-**Last updated:** 2026-05-27
-**Current phase:** v1 feature-complete and deployed. Awaiting friendly-user testing.
+**Last updated:** 2026-06-13
+**Current phase:** v1 live and polished. Awaiting friendly-user testing.
 **Live:** https://statesense.vercel.app · **Repo:** github.com/tfred-d/statesense
 
 ## Where we are
@@ -62,6 +62,7 @@ Nothing technical blocks sharing it. Remaining is validation + the v2 question:
 
 ## Recent decisions (full rationale in DECISIONS.md)
 
+- **Launch polish** (06-13): landing rebuilt (timeline "how it works", dark CTA card, balanced copy, dot-grid hero), sticky header with scroll-triggered border, custom og:image + S-monogram favicon (static assets), sample screens de-watermarked, mobile padding bumped to 1.5rem (CTA full-bleed now `-mx-6`). Cloudflare Web Analytics service connected by Theo.
 - **v2 direction** (05-27): verification layer / agent-embedded skill, not a Figma-handoff webapp. Gate on the moat comparison. See `docs/STRATEGY.md`.
 - **Build/polish/deploy** (05-27): IP guards (cut focus selector, hid skipped heuristics + coverage score, sanitized JSON); PDF → browser print-to-PDF (dropped @react-pdf); voice input added; context now required; Cloudflare analytics; live on Vercel.
 - **Build-readiness lock** (05-25): tool-use structured output; 5-min cache; no streaming v1; Haiku 4.5 key validation; all for $0 cost.

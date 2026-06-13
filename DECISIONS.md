@@ -6,6 +6,19 @@ Use this to record decisions as they're made, so future sessions (and future The
 
 ---
 
+## 2026-06-13 · Launch polish — landing, branding, mobile (no architecture change)
+
+A craft pass on the live site. No stack/scope/architecture changes; recording the few choices a future session would otherwise have to reverse-engineer.
+
+- **Landing rebuilt.** Dot-grid hero (pseudo-element so the mask doesn't bleed onto the CTAs), "No signup" USP (not "costs cents"), value props with icons, "How it works" as a horizontal timeline (light-gray numbered nodes on a line, node-center to node-center via 12.5% insets), and a dark CTA *card* (contained on desktop, full-bleed on mobile) instead of a bordered section. Copy de-vendored ("API key", not "Anthropic") and de-em-dashed.
+- **Sticky header with scroll-triggered border.** `SiteHeader` is now a client component; `border-b` is always reserved (transparent) and fades to the border tone past 4px scroll — avoids the 1px layout shift a toggled border would cause.
+- **Branding via static assets, not generated routes.** `app/opengraph-image.png` (custom, replaced the earlier `ImageResponse` route) and an S-monogram `app/icon.tsx` + `app/apple-icon.tsx`. StateSense is wordmark-only; the "S" is a favicon device only, not a brand mark. `metadataBase` reads `NEXT_PUBLIC_SITE_URL` (falls back to the vercel.app URL).
+- **GOTCHA — container padding ↔ full-bleed.** Bumped container side padding 1rem → 1.5rem (mobile) / 2rem (lg) for breathing room. The CTA card's full-bleed depends on this exact value: it uses `-mx-6` to cancel the 1.5rem mobile padding. If container padding changes again, update that negative margin or the card won't reach the viewport edge.
+- **Sample screens de-watermarked.** `public/sample/resend/screen-N.png` were carrying the Mobbin footer; replaced with Theo's crops (index-preserving, so the hand-authored sample analysis still maps to the right screens). Slightly irregular heights (~1920×1200); display is driven by `h-auto w-full` so it doesn't matter.
+- **PDF stayed print-to-PDF** (decided 05-27); the `@react-pdf` dependency remains removed.
+
+---
+
 ## 2026-05-27 · v2 direction — verification layer, not Figma-handoff tool
 
 **Decision:** Captured a strategic reframe in `docs/STRATEGY.md` rather than acting on it now. Trigger: the question "if coding agents already handle edge cases, what's StateSense for?"

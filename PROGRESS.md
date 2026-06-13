@@ -55,8 +55,11 @@ Update by checking items as they complete. Keep notes per phase brief; full rati
 - [x] Privacy / FAQ / About (+ "Built by Theophilus Fredrick")
 - [x] Custom og:image (1200×630)
 - [x] Progressive audit loading state (timed phases)
-- [x] Cloudflare Web Analytics integration (code; cookieless)
-- [ ] **Theo: paste Cloudflare token into Vercel env + verify beacon in Network tab**
+- [x] Cloudflare Web Analytics integration (code; cookieless) — service connected by Theo
+- [x] Custom og:image (1200×630, static PNG) + S-monogram favicon / apple-icon
+- [x] Landing polish pass (timeline, dark CTA card, sticky header w/ scroll border, balanced copy, mobile padding)
+- [x] Sample screens de-watermarked (Mobbin crop)
+- [ ] Verify Cloudflare beacon actually fires (Network tab: beacon.min.js + the RUM POST)
 - [ ] 5–10 friendly-user tests
 - [ ] Mobile / Safari spot-check
 - [ ] Final dependency privacy sniff (`npm ls`; confirm no analytics on `/audit`)
