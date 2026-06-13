@@ -2,6 +2,13 @@ import Link from "next/link";
 import { ArrowRight, Crosshair, KeyRound, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const STEPS = [
+  { n: 1, title: "Add your key", body: "API key, stored locally in your browser." },
+  { n: 2, title: "Upload screens", body: "1 to 6 of them, in order." },
+  { n: 3, title: "Describe the feature", body: "Type a few lines or drop a PRD." },
+  { n: 4, title: "Get the audit", body: "About 15 seconds." }
+];
+
 export default function LandingPage() {
   return (
     <div>
@@ -12,9 +19,9 @@ export default function LandingPage() {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Catch the missing states before handoff.
             </h1>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              Upload your screens. Get a checklist of the empty, error, and edge-case
-              states your design hasn&apos;t covered yet.
+            <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+              Get a checklist of the empty, error, and edge-case states your design
+              hasn&apos;t covered yet.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button size="lg" asChild>
@@ -57,37 +64,44 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How */}
+      {/* How it works — horizontal timeline */}
       <section className="container py-16">
         <h2 className="text-2xl font-semibold tracking-tight">How it works</h2>
-        <ol className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-4">
-          {[
-            { n: 1, title: "Add your key", body: "API key, stored locally in your browser." },
-            { n: 2, title: "Upload screens", body: "1 to 6 of them, in order." },
-            { n: 3, title: "Describe the feature", body: "Type a few lines or drop a PRD." },
-            { n: 4, title: "Get the audit", body: "About 15 seconds." }
-          ].map((s) => (
-            <li key={s.n} className="rounded-lg border bg-card p-5">
-              <div className="text-xs font-semibold text-muted-foreground">Step {s.n}</div>
-              <h3 className="mt-1 font-semibold">{s.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="relative mt-10">
+          {/* Connecting line, running node-center to node-center (each node is
+              centered in its 25%-wide column → centers at 12.5% and 87.5%). */}
+          <div
+            className="absolute left-[12.5%] right-[12.5%] top-5 hidden h-px bg-border sm:block"
+            aria-hidden
+          />
+          <ol className="grid grid-cols-1 gap-10 sm:grid-cols-4 sm:gap-6">
+            {STEPS.map((s) => (
+              <li key={s.n} className="relative flex flex-col items-center text-center">
+                <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  {s.n}
+                </div>
+                <h3 className="mt-4 font-semibold">{s.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
-      {/* CTA */}
-      <section className="border-t border-border py-14">
-        <div className="container text-center">
-          <h2 className="text-2xl font-semibold tracking-tight">Audit your next feature.</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Drop in your screens. See what an extra pair of eyes would catch.
-          </p>
-          <Button size="lg" className="mt-5" asChild>
-            <Link href="/audit">
-              Run an audit <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
+      {/* CTA — dark card, contained on desktop, full-bleed on mobile */}
+      <section className="py-16">
+        <div className="container">
+          <div className="-mx-4 bg-primary px-6 py-14 text-center text-primary-foreground sm:mx-0 sm:rounded-2xl">
+            <h2 className="text-2xl font-semibold tracking-tight">Audit your next feature.</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-primary-foreground/70">
+              Drop in your screens. See what an extra pair of eyes would catch.
+            </p>
+            <Button size="lg" variant="secondary" className="mt-5" asChild>
+              <Link href="/audit">
+                Run an audit <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>
